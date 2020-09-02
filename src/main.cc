@@ -1,19 +1,26 @@
-#include "spdlog/spdlog.h"
 #include "cxxopts.hpp"
+#include "spdlog/spdlog.h"
 
-const cxxopts::ParseResult& ParseCommandlineArgs(int argc, char *argv[]) noexcept {
+const void ParseCommandlineArgs(int argc, char *argv[]) noexcept {
   try {
     cxxopts::Options options("protodb2", "prototype database #2");
 
-    return options.parse(argc, argv);
-  } catch (const cxxopts::OptionException& e) {
+    options.add_options()("h,help", "Print usage");
+
+    auto result = options.parse(argc, argv);
+
+    if (result.count("help")) {
+      std::cout << options.help() << std::endl;
+      exit(0);
+    }
+  } catch (const cxxopts::OptionException &e) {
     spdlog::error("{}", e.what());
     exit(1);
   }
 }
 
 int main(int argc, char *argv[]) {
-  const auto& result = ParseCommandlineArgs(argc, argv);
+  ParseCommandlineArgs(argc, argv);
 
   spdlog::set_level(spdlog::level::info);
 
