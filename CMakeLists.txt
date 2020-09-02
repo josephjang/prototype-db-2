@@ -18,6 +18,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
 
 set(BUILD_SUPPORT_DIR ${CMAKE_SOURCE_DIR}/build-support)
 
+find_package(gRPC CONFIG REQUIRED)
+
 #
 # Target: protodb2
 #
@@ -32,7 +34,31 @@ target_compile_definitions(protodb2
 
 target_compile_features(protodb2 PRIVATE cxx_std_17)
 
-target_sources(protodb2 PRIVATE src/main.cc)
+# Protobuf compilation
+
+get_filename_component(protodb2_proto "${CMAKE_CURRENT_SOURCE_DIR}/src/proto/protodb2.proto" ABSOLUTE)
+get_filename_component(protodb2_proto_path "${protodb2_proto}" PATH)
+
+set(protodb2_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/protodb2.pb.cc")
+set(protodb2_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/protodb2.pb.h")
+set(protodb2_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/protodb2.grpc.pb.cc")
+set(protodb2_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/protodb2.grpc.pb.h")
+add_custom_command(
+      OUTPUT "${protodb2_proto_srcs}" "${protodb2_proto_hdrs}" "${protodb2_grpc_srcs}" "${protodb2_grpc_hdrs}"
+      COMMAND protoc
+      ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
+        --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
+        --proto_path "${protodb2_proto_path}"
+        --plugin=protoc-gen-grpc="/usr/bin/grpc_cpp_plugin"
+        "${protodb2_proto}"
+      DEPENDS "${protodb2_proto}")
+
+target_sources(protodb2
+  PRIVATE
+    "src/main.cc"
+    "${protodb2_proto_srcs}"
+    "${protodb2_grpc_srcs}"
+)
 
 target_include_directories(protodb2
   PRIVATE 
@@ -48,6 +74,8 @@ target_link_libraries(protodb2
     folly
     glog
     pthread
+    gRPC::grpc++
+    gRPC::grpc++_reflection
 )
 
 #
