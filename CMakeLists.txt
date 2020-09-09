@@ -56,6 +56,7 @@ add_custom_command(
 target_sources(protodb2
   PRIVATE
     "src/main.cc"
+    "src/grpc_server.cc"
     "${protodb2_proto_srcs}"
     "${protodb2_grpc_srcs}"
 )
