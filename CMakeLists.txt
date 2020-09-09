@@ -83,8 +83,8 @@ target_link_libraries(protodb2
 # Compiler Tools
 #
 
-set(CLANG_FORMAT_VERSION_PATTERN "9")
-set(CLANG_TIDY_VERSION_PATTERN "9")
+set(CLANG_FORMAT_VERSION_PATTERN "10")
+set(CLANG_TIDY_VERSION_PATTERN "10")
 find_package(ClangTools)
 
 #
