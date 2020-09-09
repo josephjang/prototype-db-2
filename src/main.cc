@@ -4,6 +4,7 @@
 #include "cxxopts.hpp"
 #include "grpc_server.h"
 #include "spdlog/spdlog.h"
+#include "std_map_storage_engine.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -28,7 +29,10 @@ const void ParseCommandlineArgs(int argc, char *argv[]) noexcept {
 
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
-  GRPCServer grpcServer;
+
+  StandardMapStorageEngine storage_engine;
+
+  GRPCServer grpcServer(&storage_engine);
 
   grpc::EnableDefaultHealthCheckService(true);
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
