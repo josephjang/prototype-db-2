@@ -57,6 +57,7 @@ target_sources(protodb2
   PRIVATE
     "src/main.cc"
     "src/grpc_server.cc"
+    "src/std_map_storage_engine.cc"
     "${protodb2_proto_srcs}"
     "${protodb2_grpc_srcs}"
 )
