@@ -1,10 +1,11 @@
 #pragma once
 #include <map>
+#include <shared_mutex>
 
 #include "storage_engine.h"
 
 class StandardMapStorageEngine : public StorageEngine {
- public:
+public:
   StandardMapStorageEngine();
   ~StandardMapStorageEngine();
 
@@ -14,9 +15,10 @@ class StandardMapStorageEngine : public StorageEngine {
 
   void Delete(const std::string &key);
 
-  std::vector<std::pair<std::string, std::string>> GetRange(
-      const std::string &start_key, const std::string &stop_key);
+  std::vector<std::pair<std::string, std::string>>
+  GetRange(const std::string &start_key, const std::string &stop_key);
 
- private:
+private:
   std::map<std::string, std::string> map_;
+  std::shared_mutex mutex_;
 };

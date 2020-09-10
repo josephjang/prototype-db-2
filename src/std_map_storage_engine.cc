@@ -6,8 +6,9 @@ StandardMapStorageEngine::StandardMapStorageEngine() {}
 
 StandardMapStorageEngine::~StandardMapStorageEngine() {}
 
-std::optional<std::string> StandardMapStorageEngine::Get(
-    const std::string &key) {
+std::optional<std::string>
+StandardMapStorageEngine::Get(const std::string &key) {
+  std::shared_lock lock(mutex_);
   auto it = map_.find(key);
   if (it != map_.end()) {
     return {it->second};
@@ -18,16 +19,19 @@ std::optional<std::string> StandardMapStorageEngine::Get(
 
 void StandardMapStorageEngine::Set(const std::string &key,
                                    const std::string &value) {
+  std::unique_lock lock(mutex_);
   map_.insert_or_assign(key, value);
 }
 
 void StandardMapStorageEngine::Delete(const std::string &key) {
+  std::unique_lock lock(mutex_);
   map_.erase(key);
 }
 
 std::vector<std::pair<std::string, std::string>>
 StandardMapStorageEngine::GetRange(const std::string &start_key,
                                    const std::string &stop_key) {
+  std::shared_lock lock(mutex_);
   auto start_it = map_.lower_bound(start_key);
   auto stop_it = map_.upper_bound(stop_key);
 
