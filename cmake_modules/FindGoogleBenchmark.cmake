@@ -1,4 +1,4 @@
-# jemalloc
+# benchmark
 
 find_library(
   GOOGLE_BENCHMARK_LIBRARIES
