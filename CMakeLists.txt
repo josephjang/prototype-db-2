@@ -82,6 +82,32 @@ target_link_libraries(protodb2
 )
 
 #
+# Target: storage_engine_benchmark
+#
+
+find_package(GoogleBenchmark REQUIRED)
+
+add_executable(storage_engine_benchmark)
+
+target_sources(storage_engine_benchmark
+ PRIVATE
+  "benchmark/storage_engine_benchmark.cc"
+  "src/std_map_storage_engine.cc")
+
+target_include_directories(storage_engine_benchmark
+  PRIVATE
+    "${CMAKE_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/thirdparty"
+)
+
+
+target_link_libraries(storage_engine_benchmark
+  PRIVATE
+    "${JEMALLOC_LIBRARIES}"
+    "${GOOGLE_BENCHMARK_LIBRARIES}"
+)
+
+#
 # Compiler Tools
 #
 
