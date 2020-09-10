@@ -64,9 +64,8 @@ target_sources(protodb2
 
 target_include_directories(protodb2
   PRIVATE 
-    "${CMAKE_SOURCE_DIR}/include"
+    "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/thirdparty"
-    "${LIBUV_INCLUDE_DIRS}"
     "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
